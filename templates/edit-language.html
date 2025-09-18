@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modifier une langue{% endblock %}
+
+{% block content %}
+<div id="edit-language" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Modifier la langue</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.level.label_tag }}
+                    {{ form.level }}
+                    {{ form.level.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.certification.label_tag }}
+                    {{ form.certification }}
+                    {{ form.certification.errors }}
+                </div>
+                <button type="submit" class="btn-form">Enregistrer les modifications</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

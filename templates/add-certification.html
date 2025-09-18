@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter une certification{% endblock %}
+
+{% block content %}
+<div id="add-certification" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter une certification</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value|default_if_none:'' }}" required placeholder="Ex: AWS Certified Solutions Architect">
+                    {{ form.name.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.issuer.id_for_label }}">{{ form.issuer.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.issuer.id_for_label }}" name="{{ form.issuer.name }}" value="{{ form.issuer.value|default_if_none:'' }}" required placeholder="Ex: Amazon Web Services">
+                    {{ form.issuer.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.credential_id.id_for_label }}">{{ form.credential_id.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.credential_id.id_for_label }}" name="{{ form.credential_id.name }}" value="{{ form.credential_id.value|default_if_none:'' }}" placeholder="ID de la certification (optionnel)">
+                    {{ form.credential_id.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.issue_date.id_for_label }}">{{ form.issue_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.issue_date.id_for_label }}" name="{{ form.issue_date.name }}" value="{{ form.issue_date.value|default_if_none:'' }}" required>
+                    {{ form.issue_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.expiry_date.id_for_label }}">{{ form.expiry_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.expiry_date.id_for_label }}" name="{{ form.expiry_date.name }}" value="{{ form.expiry_date.value|default_if_none:'' }}" placeholder="Date d'expiration (optionnel)">
+                    {{ form.expiry_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.credential_url.id_for_label }}">{{ form.credential_url.label }}</label>
+                    <input type="url" class="form-control" id="{{ form.credential_url.id_for_label }}" name="{{ form.credential_url.name }}" value="{{ form.credential_url.value|default_if_none:'' }}" placeholder="https://www.credly.com/badges/...">
+                    {{ form.credential_url.errors }}
+                </div>
+                
+                <button type="submit" class="btn-form">Ajouter la certification</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modifier une certification{% endblock %}
+
+{% block content %}
+<div id="edit-certification" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Modifier la certification</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.issuer.label_tag }}
+                    {{ form.issuer }}
+                    {{ form.issuer.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.credential_id.label_tag }}
+                    {{ form.credential_id }}
+                    {{ form.credential_id.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.issue_date.label_tag }}
+                    {{ form.issue_date }}
+                    {{ form.issue_date.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.expiry_date.label_tag }}
+                    {{ form.expiry_date }}
+                    {{ form.expiry_date.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.credential_url.label_tag }}
+                    {{ form.credential_url }}
+                    {{ form.credential_url.errors }}
+                </div>
+                <button type="submit" class="btn-form">Enregistrer les modifications</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

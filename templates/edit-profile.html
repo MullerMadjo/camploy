@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modifier le profil{% endblock %}
+
+{% block content %}
+<div id="edit-profile" class="page active">
+    <div class="container">
+        <div class="form-container fade-in" style="max-width: 500px; margin: 2rem auto;">
+            <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem;">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" class="profile-avatar" style="object-fit:cover; width: 80px; height: 80px; border-radius: 50%; margin-bottom: 0.5rem;" alt="Photo de profil">
+                {% else %}
+                    <div class="profile-avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 0.5rem;"><i class="fas fa-user"></i></div>
+                {% endif %}
+                <h2 class="form-title">Modifier le profil</h2>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-form">Enregistrer les modifications</button>
+                <a href="{% url 'profile' %}" class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem; text-align: center;">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

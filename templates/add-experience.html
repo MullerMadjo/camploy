@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter une expérience{% endblock %}
+
+{% block content %}
+<div id="add-experience" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter une expérience professionnelle</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.job_title.id_for_label }}">{{ form.job_title.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.job_title.id_for_label }}" name="{{ form.job_title.name }}" value="{{ form.job_title.value|default_if_none:'' }}" required placeholder="Ex: Développeur Full Stack, Chef de Projet, Analyste de Données">
+                    {{ form.job_title.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.company.id_for_label }}">{{ form.company.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.company.id_for_label }}" name="{{ form.company.name }}" value="{{ form.company.value|default_if_none:'' }}" required placeholder="Ex: Orange Cameroun, MTN, Société Générale">
+                    {{ form.company.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.location.id_for_label }}" name="{{ form.location.name }}" value="{{ form.location.value|default_if_none:'' }}" placeholder="Ex: Douala, Cameroun • En télétravail">
+                    {{ form.location.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.start_date.id_for_label }}" name="{{ form.start_date.name }}" value="{{ form.start_date.value|default_if_none:'' }}" required>
+                    {{ form.start_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.end_date.id_for_label }}" name="{{ form.end_date.name }}" value="{{ form.end_date.value|default_if_none:'' }}">
+                    {{ form.end_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.is_current.id_for_label }}" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="{{ form.is_current.id_for_label }}" name="{{ form.is_current.name }}" {% if form.is_current.value %}checked{% endif %}>
+                        {{ form.is_current.label }}
+                    </label>
+                    {{ form.is_current.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}" rows="5" placeholder="Décrivez vos missions principales, technologies utilisées, projets menés...&#10;Ex: • Développement d'applications web avec Django et React&#10;• Gestion d'équipe de 3 développeurs&#10;• Mise en place de processus CI/CD">{{ form.description.value|default_if_none:'' }}</textarea>
+                    {{ form.description.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.achievements.id_for_label }}">{{ form.achievements.label }}</label>
+                    <textarea class="form-control" id="{{ form.achievements.id_for_label }}" name="{{ form.achievements.name }}" rows="4" placeholder="Vos réalisations concrètes et mesurables...&#10;Ex: • Amélioration des performances de 40%&#10;• Réduction des coûts de 25%&#10;• Formation de 15 collaborateurs&#10;• Lancement réussi de 3 produits">{{ form.achievements.value|default_if_none:'' }}</textarea>
+                    {{ form.achievements.errors }}
+                </div>
+                
+                <button type="submit" class="btn-form">Ajouter l'expérience</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

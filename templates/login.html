@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Connexion{% endblock %}
+
+{% block content %}
+<div id="login" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Connexion</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-form">Se connecter</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                Pas de compte ? <a href="{% url 'register' %}" style="color: var(--royal-blue);">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

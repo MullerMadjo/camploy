@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter une formation{% endblock %}
+
+{% block content %}
+<div id="add-education" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter une formation</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.degree.id_for_label }}">{{ form.degree.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.degree.id_for_label }}" name="{{ form.degree.name }}" value="{{ form.degree.value|default_if_none:'' }}" required placeholder="Ex: Master en Informatique, Licence en Marketing">
+                    {{ form.degree.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.institution.id_for_label }}">{{ form.institution.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.institution.id_for_label }}" name="{{ form.institution.name }}" value="{{ form.institution.value|default_if_none:'' }}" required placeholder="Ex: Université de Douala, École Supérieure Polytechnique">
+                    {{ form.institution.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}">{{ form.location.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.location.id_for_label }}" name="{{ form.location.name }}" value="{{ form.location.value|default_if_none:'' }}" placeholder="Ex: Douala, Cameroun">
+                    {{ form.location.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.field_of_study.id_for_label }}">{{ form.field_of_study.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.field_of_study.id_for_label }}" name="{{ form.field_of_study.name }}" value="{{ form.field_of_study.value|default_if_none:'' }}" placeholder="Ex: Génie Logiciel, Intelligence Artificielle">
+                    {{ form.field_of_study.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.start_date.id_for_label }}" name="{{ form.start_date.name }}" value="{{ form.start_date.value|default_if_none:'' }}" required>
+                    {{ form.start_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                    <input type="date" class="form-control" id="{{ form.end_date.id_for_label }}" name="{{ form.end_date.name }}" value="{{ form.end_date.value|default_if_none:'' }}">
+                    {{ form.end_date.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.is_current.id_for_label }}" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="{{ form.is_current.id_for_label }}" name="{{ form.is_current.name }}" {% if form.is_current.value %}checked{% endif %}>
+                        {{ form.is_current.label }}
+                    </label>
+                    {{ form.is_current.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.gpa.id_for_label }}">{{ form.gpa.label }}</label>
+                    <input type="number" class="form-control" id="{{ form.gpa.id_for_label }}" name="{{ form.gpa.name }}" value="{{ form.gpa.value|default_if_none:'' }}" step="0.01" min="0" max="20" placeholder="Ex: 15.5 (sur 20) ou 3.8 (sur 4.0)">
+                    {{ form.gpa.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                    <textarea class="form-control" id="{{ form.description.id_for_label }}" name="{{ form.description.name }}" rows="4" placeholder="Description des cours principaux, projets réalisés, compétences acquises...">{{ form.description.value|default_if_none:'' }}</textarea>
+                    {{ form.description.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.achievements.id_for_label }}">{{ form.achievements.label }}</label>
+                    <textarea class="form-control" id="{{ form.achievements.id_for_label }}" name="{{ form.achievements.name }}" rows="3" placeholder="Ex: Mention Très Bien, Prix d'excellence, Major de promotion...">{{ form.achievements.value|default_if_none:'' }}</textarea>
+                    {{ form.achievements.errors }}
+                </div>
+                
+                <button type="submit" class="btn-form">Ajouter la formation</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

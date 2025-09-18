@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer une expérience{% endblock %}
+
+{% block content %}
+<div id="delete-experience" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Supprimer l'expérience</h2>
+            <p>Voulez-vous vraiment supprimer l'expérience <strong>{{ experience.job_title }}</strong> chez <strong>{{ experience.company }}</strong> ?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-form btn-danger">Confirmer la suppression</button>
+                <a href="{{ return_url }}" class="btn btn-secondary" style="margin-left: 1rem;">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

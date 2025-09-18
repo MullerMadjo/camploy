@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard CV{% endblock %}
+{% block content %}
+<div id="dashboard-cv" class="page active">
+    <div class="container">
+        <!-- Header du Dashboard -->
+        <div class="dashboard-header fade-in">
+            <h1 class="dashboard-title">Mes CV</h1>
+            <p class="dashboard-subtitle">Gérez tous vos CV et accédez à leur gestion détaillée</p>
+            <a href="{% url 'add-cv' %}" class="btn-add">+ Ajouter un CV</a>
+        </div>
+
+        <!-- Liste des CV -->
+        <div class="dashboard-sections fade-in">
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-regular fa-file-lines" style="color:var(--royal-blue);"></i> Liste de mes CV</h3>
+                </div>
+                {% if user_cvs and user_cvs|length > 0 %}
+                    <div class="items-grid">
+                        {% for cv in user_cvs %}
+                        <div class="item-card">
+                            <div class="item-content">
+                                <h4>{{ cv.title }}</h4>
+                                <p class="item-description">{{ cv.description|default:'Aucune description.' }}</p>
+                                <div class="cv-links">
+                                    {% if cv.github %}
+                                        <a href="{{ cv.github }}" target="_blank" class="cv-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                    {% endif %}
+                                    {% if cv.linkedin %}
+                                        <a href="{{ cv.linkedin }}" target="_blank" class="cv-link"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'cv-dashboard' cv.id %}" class="btn-small btn-edit">Gérer</a>
+                                <a href="{% url 'edit-cv' cv.id %}" class="btn-small btn-primary"><i class="fa-regular fa-pen-to-square"></i></a>
+                                <button class="btn-small btn-delete" type="button" data-cv-id="{{ cv.id }}" data-cv-title="{{ cv.title|escapejs }}"><i class="fa-regular fa-trash-can"></i></button>
+                            </div>
+                            <form id="delete-cv-form-{{ cv.id }}" method="post" action="{% url 'delete-cv' cv.id %}" style="display:none;">{% csrf_token %}</form>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-regular fa-file-lines"></i></div>
+                        <p>Vous n'avez pas encore de CV</p>
+                        <a href="{% url 'add-cv' %}" class="btn btn-primary">Créer votre premier CV</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Modal de confirmation suppression -->
+                <div id="deleteModal" class="modal" tabindex="-1" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(16,23,42,0.45);align-items:center;justify-content:center;">
+                    <div class="modal-dialog custom-modal-dialog">
+                        <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation" style="color:#e74c3c;"></i></div>
+                        <h3 class="modal-title">Confirmer la suppression</h3>
+                        <p id="modal-cv-title" class="modal-message"></p>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" type="button" id="modal-cancel-btn">Annuler</button>
+                            <button class="btn btn-danger" id="modal-confirm-btn" type="button">Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                .custom-modal-dialog {
+                        background: var(--bg-card);
+                        color: var(--text-primary);
+                        padding: 2.5rem 2rem 2rem 2rem;
+                        border-radius: 1.2rem;
+                        max-width: 420px;
+                        margin: auto;
+                        box-shadow: 0 6px 32px var(--shadow);
+                        text-align: center;
+                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                }
+                .modal-icon {
+                        font-size: 2.5rem;
+                        margin-bottom: 1rem;
+                }
+                .modal-title {
+                        font-size: 1.3rem;
+                        font-weight: 700;
+                        margin-bottom: 0.7rem;
+                        color: var(--royal-blue);
+                }
+                .modal-message {
+                        font-size: 1rem;
+                        color: var(--text-secondary);
+                        margin-bottom: 2rem;
+                }
+                .modal-actions {
+                        display: flex;
+                        gap: 1rem;
+                        justify-content: center;
+                        width: 100%;
+                }
+                .btn-danger {
+                        background: #e74c3c;
+                        color: #fff;
+                        border: none;
+                        border-radius: 0.5rem;
+                        padding: 0.7rem 1.5rem;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        transition: background 0.2s;
+                }
+                .btn-danger:hover {
+                        background: #c0392b;
+                }
+                .btn-secondary {
+                        background: transparent;
+                        color: var(--royal-blue);
+                        border: 2px solid var(--royal-blue);
+                        border-radius: 0.5rem;
+                        padding: 0.7rem 1.5rem;
+                        font-size: 1rem;
+                        font-weight: 600;
+                        transition: background 0.2s, color 0.2s;
+                }
+                .btn-secondary:hover {
+                        background: var(--royal-blue);
+                        color: #fff;
+                }
+                @media (max-width: 600px) {
+                        .custom-modal-dialog {
+                                padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+                                max-width: 95vw;
+                        }
+                }
+                </style>
+
+        <!-- Footer -->
+        <div class="dashboard-footer fade-in">
+            <a href="{% url 'profile' %}" class="btn btn-secondary">Voir mon Profil</a>
+        </div>
+    </div>
+</div>
+
+<script>
+// JS pour gérer le pop-up de suppression de CV
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.btn-delete[data-cv-id]');
+    const modal = document.getElementById('deleteModal');
+    const modalTitle = document.getElementById('modal-cv-title');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+    const cancelBtn = document.getElementById('modal-cancel-btn');
+    let currentCvId = null;
+
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentCvId = this.getAttribute('data-cv-id');
+            const cvTitle = this.getAttribute('data-cv-title');
+            modalTitle.textContent = `Voulez-vous vraiment supprimer le CV « ${cvTitle} » ? Cette action est irréversible.`;
+            modal.style.display = 'flex';
+        });
+    });
+
+    confirmBtn.addEventListener('click', function() {
+        if (currentCvId) {
+            const form = document.getElementById('delete-cv-form-' + currentCvId);
+            if (form) form.submit();
+            modal.style.display = 'none';
+        }
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        currentCvId = null;
+    });
+
+    // Fermer le modal si on clique en dehors du dialog
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            currentCvId = null;
+        }
+    });
+});
+</script>
+{% endblock %}

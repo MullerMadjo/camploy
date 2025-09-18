@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer une formation{% endblock %}
+
+{% block content %}
+<div id="delete-education" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Supprimer la formation</h2>
+            <p>Voulez-vous vraiment supprimer la formation <strong>{{ education.degree }}</strong> à <strong>{{ education.institution }}</strong> ?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-form btn-danger">Confirmer la suppression</button>
+                <a href="{{ return_url }}" class="btn btn-secondary" style="margin-left: 1rem;">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

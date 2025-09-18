@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Inscription{% endblock %}
+
+{% block content %}
+<div id="register" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Inscription</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="first_name">Prénom</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Nom</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Sexe</label>
+                    <select class="form-control" id="gender" name="gender">
+                        <option value="">Sélectionner...</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                        <option value="O">Autre</option>
+                        <option value="N">Préfère ne pas dire</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="birth_date">Date de naissance</label>
+                    <input type="date" class="form-control" id="birth_date" name="birth_date">
+                </div>
+                <div class="form-group">
+                    <label for="city">Ville de résidence</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Téléphone</label>
+                    <input type="tel" class="form-control" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirmer le mot de passe</label>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn-form">S'inscrire</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                Déjà un compte ? <a href="{% url 'login' %}" style="color: var(--royal-blue);">Se connecter</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

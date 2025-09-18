@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter une langue{% endblock %}
+
+{% block content %}
+<div id="add-language" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter une langue</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value|default_if_none:'' }}" required placeholder="Ex: Français, Anglais, Allemand, Espagnol, Arabe">
+                    {{ form.name.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.level.id_for_label }}">{{ form.level.label }}</label>
+                    {% if form.level.field.widget.input_type == 'select' %}
+                        {{ form.level }}
+                    {% else %}
+                        <input type="text" class="form-control" id="{{ form.level.id_for_label }}" name="{{ form.level.name }}" value="{{ form.level.value|default_if_none:'' }}" required placeholder="Ex: Débutant, Intermédiaire, Avancé, Courant, Natif">
+                    {% endif %}
+                    <small style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem; display: block;">
+                        Échelle CECR : A1 (Débutant), A2 (Élémentaire), B1 (Intermédiaire), B2 (Indépendant), C1 (Avancé), C2 (Maîtrise)
+                    </small>
+                    {{ form.level.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.certification.id_for_label }}">{{ form.certification.label }}</label>
+                    <input type="text" class="form-control" id="{{ form.certification.id_for_label }}" name="{{ form.certification.name }}" value="{{ form.certification.value|default_if_none:'' }}" placeholder="Ex: TOEFL 95, IELTS 7.5, DELF B2, TCF C1 (optionnel)">
+                    {{ form.certification.errors }}
+                </div>
+                
+                <button type="submit" class="btn-form">Ajouter la langue</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

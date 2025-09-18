@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer un projet{% endblock %}
+
+{% block content %}
+<div id="delete-project" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Supprimer le projet</h2>
+            <p>Voulez-vous vraiment supprimer le projet <strong>{{ project.name }}</strong> ?</p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-form btn-danger">Confirmer la suppression</button>
+                <a href="{{ return_url }}" class="btn btn-secondary" style="margin-left: 1rem;">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter une compétence{% endblock %}
+
+{% block content %}
+<div id="add-skill" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter une compétence</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Nom de la compétence</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Python, Photoshop, Gestion d'équipe..." required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Catégorie</label>
+                    <select class="form-control" id="category" name="category" required>
+                        <option value="">Sélectionner une catégorie...</option>
+                        <option value="technique">Technique</option>
+                        <option value="langages">Langages de programmation</option>
+                        <option value="frameworks">Frameworks/Bibliothèques</option>
+                        <option value="outils">Outils/Logiciels</option>
+                        <option value="design">Design/Créativité</option>
+                        <option value="soft_skills">Compétences relationnelles</option>
+                        <option value="langues">Langues</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="level">Niveau de maîtrise</label>
+                    <select class="form-control" id="level" name="level" required>
+                        <option value="">Sélectionner un niveau...</option>
+                        <option value="debutant">Débutant</option>
+                        <option value="intermediaire">Intermédiaire</option>
+                        <option value="avance">Avancé</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="percentage">Pourcentage de maîtrise (1-100)</label>
+                    <input type="number" class="form-control" id="percentage" name="percentage" min="1" max="100" placeholder="Ex: 85" required>
+                </div>
+                <button type="submit" class="btn-form">Ajouter la compétence</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{{ return_url }}" style="color: var(--royal-blue);">Retour au CV</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

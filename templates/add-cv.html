@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Ajouter un CV{% endblock %}
+
+{% block content %}
+<div id="add-cv" class="page active">
+    <div class="container">
+        <div class="form-container fade-in">
+            <h2 class="form-title">Ajouter un CV</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ cv_form.non_field_errors }}
+                
+                <div class="form-group">
+                    <label for="{{ cv_form.title.id_for_label }}">{{ cv_form.title.label }}</label>
+                    <input type="text" class="form-control" id="{{ cv_form.title.id_for_label }}" name="{{ cv_form.title.name }}" value="{{ cv_form.title.value|default_if_none:'' }}" required>
+                    {{ cv_form.title.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ cv_form.description.id_for_label }}">{{ cv_form.description.label }}</label>
+                    <textarea class="form-control" id="{{ cv_form.description.id_for_label }}" name="{{ cv_form.description.name }}" rows="4">{{ cv_form.description.value|default_if_none:'' }}</textarea>
+                    {{ cv_form.description.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ cv_form.github.id_for_label }}">{{ cv_form.github.label }}</label>
+                    <input type="url" class="form-control" id="{{ cv_form.github.id_for_label }}" name="{{ cv_form.github.name }}" value="{{ cv_form.github.value|default_if_none:'' }}" placeholder="https://github.com/votre-nom">
+                    {{ cv_form.github.errors }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ cv_form.linkedin.id_for_label }}">{{ cv_form.linkedin.label }}</label>
+                    <input type="url" class="form-control" id="{{ cv_form.linkedin.id_for_label }}" name="{{ cv_form.linkedin.name }}" value="{{ cv_form.linkedin.value|default_if_none:'' }}" placeholder="https://linkedin.com/in/votre-nom">
+                    {{ cv_form.linkedin.errors }}
+                </div>
+                
+                <button type="submit" class="btn-form">Enregistrer le CV</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem;">
+                <a href="{% url 'profile' %}" style="color: var(--royal-blue);">Retour au profil</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

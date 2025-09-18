@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Dashboard du CV{% endblock %}
+
+{% block content %}
+<div id="cv-dashboard" class="page active">
+    <div class="container">
+        <!-- Header du Dashboard -->
+        <div class="dashboard-header fade-in">
+            <h1 class="dashboard-title">{{ cv.title }}</h1>
+            <p class="dashboard-subtitle">Gérez et enrichissez votre CV professionnel</p>
+            <a href="{% url 'edit-cv' cv.id %}" class="edit-cv-btn"><i class="fa-regular fa-pen-to-square" style="margin-right:0.4em;"></i>Modifier le titre</a>
+        </div>
+
+        <!-- Sections du CV -->
+        <div class="dashboard-sections fade-in">
+            
+            <!-- Expériences professionnelles -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-briefcase" style="color:var(--royal-blue);"></i> Expériences professionnelles</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ experiences|length }} élément{{ experiences|length|pluralize }}</span>
+                        <a href="{% url 'add-experience' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if experiences %}
+                    <div class="items-grid">
+                        {% for exp in experiences %}
+                        <div class="item-card">
+                            <div class="item-content">
+                                <h4>{{ exp.job_title }}</h4>
+                                <p class="item-company">{{ exp.company }}</p>
+                                <p class="item-date">{{ exp.start_date }}{% if exp.end_date %} - {{ exp.end_date }}{% else %} - présent{% endif %}</p>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-experience' exp.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="experience" data-id="{{ exp.id }}" data-name="{{ exp.job_title|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-experience-form-{{ exp.id }}" method="post" action="{% url 'edit-experience' exp.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-briefcase"></i></div>
+                        <p>Aucune expérience professionnelle ajoutée</p>
+                        <a href="{% url 'add-experience' cv.id %}" class="btn btn-primary">Ajouter votre première expérience</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Formations -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-graduation-cap" style="color:var(--royal-blue);"></i> Formations</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ educations|length }} élément{{ educations|length|pluralize }}</span>
+                        <a href="{% url 'add-education' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if educations %}
+                    <div class="items-grid">
+                        {% for edu in educations %}
+                        <div class="item-card">
+                            <div class="item-content">
+                                <h4>{{ edu.degree }}</h4>
+                                <p class="item-company">{{ edu.institution }}</p>
+                                <p class="item-date">{{ edu.start_date }}{% if edu.end_date %} - {{ edu.end_date }}{% else %} - présent{% endif %}</p>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-education' edu.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="education" data-id="{{ edu.id }}" data-name="{{ edu.degree|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-education-form-{{ edu.id }}" method="post" action="{% url 'edit-education' edu.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <p>Aucune formation ajoutée</p>
+                        <a href="{% url 'add-education' cv.id %}" class="btn btn-primary">Ajouter votre première formation</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Compétences -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-bolt" style="color:var(--royal-blue);"></i> Compétences</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ skills|length }} élément{{ skills|length|pluralize }}</span>
+                        <a href="{% url 'add-skill' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if skills %}
+                    <div class="skills-grid">
+                        {% for skill in skills %}
+                        <div class="skill-card">
+                            <div class="skill-content">
+                                <h4>{{ skill.name }}</h4>
+                                <span class="skill-level">{{ skill.get_level_display }}</span>
+                                <div class="skill-progress">
+                                    <!-- <div class="progress-bar" style="width: {{ skill.percentage }}%"></div> -->
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-skill' skill.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="skill" data-id="{{ skill.id }}" data-name="{{ skill.name|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-skill-form-{{ skill.id }}" method="post" action="{% url 'edit-skill' skill.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-bolt"></i></div>
+                        <p>Aucune compétence ajoutée</p>
+                        <a href="{% url 'add-skill' cv.id %}" class="btn btn-primary">Ajouter votre première compétence</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Projets -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-rocket" style="color:var(--royal-blue);"></i> Projets</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ projects|length }} élément{{ projects|length|pluralize }}</span>
+                        <a href="{% url 'add-project' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if projects %}
+                    <div class="items-grid">
+                        {% for project in projects %}
+                        <div class="item-card">
+                            <div class="item-content">
+                                <h4>{{ project.name }}</h4>
+                                <p class="item-description">{{ project.description|truncatechars:100 }}</p>
+                                <p class="item-date">{{ project.start_date }}{% if project.end_date %} - {{ project.end_date }}{% endif %}</p>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-project' project.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="project" data-id="{{ project.id }}" data-name="{{ project.name|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-project-form-{{ project.id }}" method="post" action="{% url 'edit-project' project.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-rocket"></i></div>
+                        <p>Aucun projet ajouté</p>
+                        <a href="{% url 'add-project' cv.id %}" class="btn btn-primary">Ajouter votre premier projet</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Langues -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-language" style="color:var(--royal-blue);"></i> Langues</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ languages|length }} élément{{ languages|length|pluralize }}</span>
+                        <a href="{% url 'add-language' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if languages %}
+                    <div class="languages-grid">
+                        {% for lang in languages %}
+                        <div class="language-card">
+                            <div class="language-content">
+                                <h4>{{ lang.name }}</h4>
+                                <span class="language-level">{{ lang.get_level_display }}</span>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-language' lang.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="language" data-id="{{ lang.id }}" data-name="{{ lang.name|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-language-form-{{ lang.id }}" method="post" action="{% url 'edit-language' lang.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-language"></i></div>
+                        <p>Aucune langue ajoutée</p>
+                        <a href="{% url 'add-language' cv.id %}" class="btn btn-primary">Ajouter votre première langue</a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Certifications -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-award" style="color:var(--royal-blue);"></i> Certifications</h3>
+                    <div class="section-header-actions">
+                        <span class="section-count">{{ certifications|length }} élément{{ certifications|length|pluralize }}</span>
+                        <a href="{% url 'add-certification' cv.id %}" class="btn-add">+ Ajouter</a>
+                    </div>
+                </div>
+                {% if certifications %}
+                    <div class="items-grid">
+                        {% for cert in certifications %}
+                        <div class="item-card">
+                            <div class="item-content">
+                                <h4>{{ cert.name }}</h4>
+                                <p class="item-company">{{ cert.issuer }}</p>
+                                <p class="item-date">{{ cert.issue_date }}</p>
+                            </div>
+                            <div class="item-actions">
+                                <a href="{% url 'edit-certification' cert.id %}" class="btn-small btn-edit">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-type="certification" data-id="{{ cert.id }}" data-name="{{ cert.name|escapejs }}" data-parent="{{ cv.id }}">Supprimer</button>
+                                <form id="delete-certification-form-{{ cert.id }}" method="post" action="{% url 'edit-certification' cert.id %}?delete=1" style="display:none;">{% csrf_token %}</form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-award"></i></div>
+                        <p>Aucune certification ajoutée</p>
+                        <a href="{% url 'add-certification' cv.id %}" class="btn btn-primary">Ajouter votre première certification</a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- Modal de confirmation suppression universel (placé à la racine du container, hors boucle) -->
+        <div id="deleteModal" class="modal" tabindex="-1" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(16,23,42,0.45);align-items:center;justify-content:center;">
+            <div class="modal-dialog custom-modal-dialog modern-modal">
+                <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h3 class="modal-title">Confirmer la suppression</h3>
+                <p id="modal-delete-message" class="modal-message"></p>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" type="button" id="modal-cancel-btn">Annuler</button>
+                    <button class="btn btn-danger" id="modal-confirm-btn" type="button">Supprimer</button>
+                </div>
+            </div>
+        </div>
+        <style>
+        .modern-modal {
+            background: #181c24;
+            color: #f7f9fc;
+            padding: 2.2rem 1.2rem 1.7rem 1.2rem;
+            border-radius: 1.3rem;
+            width: 100%;
+            max-width: 370px;
+            margin: auto;
+            box-shadow: 0 8px 40px 0 rgba(16,23,42,0.22), 0 1.5px 6px 0 rgba(16,23,42,0.10);
+            text-align: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeInModal 0.35s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: translateY(40px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modern-modal .modal-icon {
+            font-size: 2.7rem;
+            margin-bottom: 1.1rem;
+            color: #ff5f56;
+            background: #232733;
+            border-radius: 50%;
+            padding: 0.6em 0.8em;
+            box-shadow: 0 2px 12px #e74c3c22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modern-modal .modal-title {
+            font-size: 1.18rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: #fff;
+            letter-spacing: 0.01em;
+        }
+        .modern-modal .modal-message {
+            font-size: 1.01rem;
+            color: #e0e6f0;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        .modern-modal .modal-actions {
+            display: flex;
+            gap: 0.7rem;
+            justify-content: center;
+            width: 100%;
+        }
+        .modern-modal .btn-danger {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 0.7rem;
+            padding: 0.7rem 1.3rem;
+            font-size: 1.01rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px #e74c3c22;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .modern-modal .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 4px 16px #e74c3c33;
+        }
+        .modern-modal .btn-secondary {
+            background: transparent;
+            color: #7ea2ff;
+            border: 2px solid #7ea2ff;
+            border-radius: 0.7rem;
+            padding: 0.7rem 1.3rem;
+            font-size: 1.01rem;
+            font-weight: 700;
+            transition: background 0.2s, color 0.2s;
+        }
+        .modern-modal .btn-secondary:hover {
+            background: #7ea2ff;
+            color: #181c24;
+        }
+        @media (max-width: 600px) {
+            .modern-modal {
+                padding: 0.7rem 0.05rem 1rem 0.05rem;
+                max-width: 70vw;
+            }
+            .modern-modal .modal-title {
+                font-size: 0.92rem;
+            }
+            .modern-modal .modal-message {
+                font-size: 0.87rem;
+            }
+            .modern-modal .btn-danger, .modern-modal .btn-secondary {
+                font-size: 0.87rem;
+                padding: 0.5rem 0.5rem;
+            }
+        }
+        </style>
+
+        <!-- Bouton de retour -->
+        <div class="dashboard-footer fade-in">
+            <a href="{% url 'dashboard-cv-intelligent' %}" class="btn btn-secondary">Retour au dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Camploy - Profil{% endblock %}
+
+{% block content %}
+<div id="profile" class="page active">
+    <div class="container">
+        <!-- Profile Header Section -->
+        <div class="profile-header-section fade-in">
+            <div class="profile-avatar-container">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" class="profile-avatar" style="object-fit:cover; width: 120px; height: 120px; border-radius: 50%;" alt="Photo de profil">
+                {% else %}
+                    <div class="profile-avatar" style="width: 120px; height: 120px; font-size: 3rem; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="profile-header-info">
+                <h2 class="profile-title">Mon Profil</h2>
+                <a href="{% url 'edit-profile' %}" class="btn btn-primary action-btn" style="margin: 0.5rem 0 0 0; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1rem;">
+                    <i class="fas fa-pen"></i> Modifier le profil
+                </a>
+                <!-- <p class="profile-subtitle">Gérez vos informations personnelles</p> -->
+            </div>
+        </div>
+
+        <!-- Profile Content Wrapper -->
+        <div class="profile-content-wrapper fade-in">
+            <div class="profile-container">
+                <div class="profile-info">
+                    <!-- Main Profile Card -->
+                    <div class="profile-main-section">
+                        <div class="profile-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-id-card"></i> Informations personnelles</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-user-circle"></i>
+                                        <strong>Nom d'utilisateur:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.username }}</div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-signature"></i>
+                                        <strong>Nom complet:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.full_name }}</div>
+                                </div>
+                                
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-envelope"></i>
+                                        <strong>Email:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.email }}</div>
+                                </div>
+                                
+                                {% if user.gender %}
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-venus-mars"></i>
+                                        <strong>Sexe:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.get_gender_display }}</div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if user.birth_date %}
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-birthday-cake"></i>
+                                        <strong>Date de naissance:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.birth_date|date:"d/m/Y" }}</div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if user.city %}
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <strong>Ville de résidence:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.city }}</div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if user.phone %}
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-phone"></i>
+                                        <strong>Téléphone:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.phone }}</div>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <strong>Membre depuis:</strong>
+                                    </div>
+                                    <div class="info-value">{{ user.date_joined|date:"d/m/Y" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions Sidebar -->
+                    <div class="profile-sidebar-section">
+                        <div class="profile-actions">
+                            <div class="actions-header">
+                                <h3><i class="fas fa-rocket"></i> Actions rapides</h3>
+                            </div>
+                            <div class="actions-content">
+                                <a href="{% url 'add-cv' %}" class="btn btn-primary action-btn">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span>Ajouter un CV</span>
+                                </a>
+                                <a href="{% url 'logout' %}" class="btn btn-secondary action-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Se déconnecter</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Section -->
+                        <div class="profile-stats">
+                            <div class="stats-header">
+                                <h3><i class="fas fa-chart-bar"></i> Statistiques</h3>
+                            </div>
+                            <div class="stats-content">
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-number">{{ cv_count }}</div>
+                                        <div class="stat-label">CV créés</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-number">{{ skill_count }}</div>
+                                        <div class="stat-label">Compétences listées</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-language"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-number">{{ language_count }}</div>
+                                        <div class="stat-label">Langues ajoutées</div>
+                                    </div>
+                                </div>
+
+                                <div class="stat-item">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-percentage"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <div class="stat-number">{{ profile_completion }}%</div>
+                                        <div class="stat-label">Profil complété</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
