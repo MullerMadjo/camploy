@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-o7*^pa$z)ubhe@fi^ad8h7-(-rs1b*miitm(-cua2l$+nz_2ym
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'camploy.onrender.com']
+ALLOWED_HOSTS = ['camploy.onrender.com']
 
 
 
