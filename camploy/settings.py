@@ -1,3 +1,4 @@
+
 """
 Django settings for camploy project.
 
@@ -28,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['camploy.onrender.com']
 
+print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 
 # Application definition
