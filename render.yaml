@@ -9,4 +9,10 @@ services:
         sync: false
     plan: free
     autoDeploy: true
-    postDeployCommand: "python manage.py migrate && python manage.py collectstatic --noinput"
+    postDeployCommand: |
+      python manage.py migrate accounts zero --noinput
+      python manage.py migrate core zero --noinput
+      python manage.py migrate --fake-initial
+      python manage.py migrate
+      python manage.py collectstatic --noinput
+
