@@ -2,14 +2,14 @@ services:
   - type: web
     name: camploy
     env: python
+    region: oregon
+    plan: free
+    autoDeploy: true
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn camploy.wsgi:application"
     envVars:
       - key: DATABASE_URL
-        sync: false
-    plan: free
-    autoDeploy: true
-    postDeployCommand: |
-      python manage.py makemigrations --noinput
-      python manage.py migrate --noinput
-      python manage.py collectstatic --noinput
+        fromDatabase:
+          name: camploy-postgres
+          property: connectionString
+    postDeployCommand: "python deploy_migrate.py && python manage.py collectstatic --noinput"
