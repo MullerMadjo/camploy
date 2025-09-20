@@ -29,9 +29,8 @@ SECRET_KEY = 'django-insecure-o7*^pa$z)ubhe@fi^ad8h7-(-rs1b*miitm(-cua2l$+nz_2ym
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['camploy.onrender.com']
-
-print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 
 
 # Application definition
@@ -88,17 +87,17 @@ WSGI_APPLICATION = 'camploy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
-}
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+#     "default": dj_database_url.config(
+#         default=os.environ.get("DATABASE_URL")
+#     )
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
