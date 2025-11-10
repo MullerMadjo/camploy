@@ -34,8 +34,9 @@
                             </div>
                             <div class="item-actions">
                                 <a href="{% url 'cv-dashboard' cv.id %}" class="btn-small btn-edit">Gérer</a>
-                                <a href="{% url 'edit-cv' cv.id %}" class="btn-small btn-primary"><i class="fa-regular fa-pen-to-square"></i></a>
-                                <button class="btn-small btn-delete" type="button" data-cv-id="{{ cv.id }}" data-cv-title="{{ cv.title|escapejs }}"><i class="fa-regular fa-trash-can"></i></button>
+                                <a href="{% url 'cv_pdf' cv.id %}" class="btn-small btn-secondary">PDF</a>
+                                <a href="{% url 'edit-cv' cv.id %}" class="btn-small btn-primary">Modifier</a>
+                                <button class="btn-small btn-delete" type="button" data-cv-id="{{ cv.id }}" data-cv-title="{{ cv.title|escapejs }}">Supprimer</button>
                             </div>
                             <form id="delete-cv-form-{{ cv.id }}" method="post" action="{% url 'delete-cv' cv.id %}" style="display:none;">{% csrf_token %}</form>
                         </div>

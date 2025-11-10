@@ -20,4 +20,5 @@ urlpatterns = [
     path('edit-project/<int:project_id>/', views.edit_project_view, name='edit-project'),
     path('edit-language/<int:language_id>/', views.edit_language_view, name='edit-language'),
     path('edit-certification/<int:cert_id>/', views.edit_certification_view, name='edit-certification'),
+    path('cv/<int:cv_id>/pdf/', views.cv_pdf_view, name='cv_pdf'),
 ]

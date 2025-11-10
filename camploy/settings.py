@@ -29,8 +29,8 @@ SECRET_KEY = 'django-insecure-o7*^pa$z)ubhe@fi^ad8h7-(-rs1b*miitm(-cua2l$+nz_2ym
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['camploy.onrender.com']
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['127.0.0.1','camploy.onrender.com']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'core',
     'cv',
+    'aichat',
 ]
 
 MIDDLEWARE = [
@@ -168,3 +169,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configuration du modèle utilisateur personnalisé
 AUTH_USER_MODEL = 'accounts.User'
+
+import os
+from decouple import config  # Si vous utilisez python-decouple
+
+# Configuration API DeepSeek
+# DEEPSEEK_API_KEY = config('sk-87af864002e94fc8b1a585f9d3df3129', default='')
+
+# Alternative sans python-decouple :
+# DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')
+
+# Assurez-vous d'avoir ces settings pour la sécurité
+# SECURE_SSL_REDIRECT = False  # En production
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# Clé API DeepSeek
+# DEEPSEEK_API_KEY = "sk-87af864002e94fc8b1a585f9d3df3129"
+DEEPSEEK_API_KEY = "sk-db44e122c68c464a91ca96e9d607359b"
+

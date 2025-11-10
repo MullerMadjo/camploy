@@ -10,8 +10,6 @@ class User(AbstractUser):
     GENDER_CHOICES = [
         ('M', 'Masculin'),
         ('F', 'Féminin'),
-        ('O', 'Autre'),
-        ('N', 'Préfère ne pas dire'),
     ]
     
     # Informations personnelles authentiques

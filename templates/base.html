@@ -19,6 +19,7 @@
                         <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" data-page="profile">Profil</a>
                         <a href="{% url 'add-cv' %}" class="nav-link {% if request.resolver_match.url_name == 'add-cv' %}active{% endif %}" data-page="add-cv">Ajouter CV</a>
                         <a href="{% url 'dashboard-cv-intelligent' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard-cv-intelligent' %}active{% endif %}" data-page="dashboard-cv">Mes CV</a>
+                        <a href="{% url 'camploy_ai_chat' %}" class="nav-link {% if request.resolver_match.url_name == 'camploy_ai_chat' %}active{% endif %}" data-page="ai-chat"><i class="fa-solid fa-robot"></i> Chat IA</a>
                         <a href="{% url 'logout' %}" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> &nbsp; Déconnexion</a>
                     {% else %}
                         <a href="{% url 'login' %}" class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" data-page="login">Connexion</a>

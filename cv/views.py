@@ -3,6 +3,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import CV
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.shortcuts import get_object_or_404
+from xhtml2pdf import pisa
+
 
 @login_required
 def delete_cv_view(request, cv_id):
@@ -401,3 +406,27 @@ def edit_cv_view(request, cv_id=None):
     else:
         form = CVForm(instance=cv)
     return render(request, 'edit-cv.html', {'form': form, 'cv': cv})
+
+@login_required
+def cv_pdf_view(request, cv_id):
+    cv = get_object_or_404(CV, id=cv_id, user=request.user)
+
+    context = {
+        "cv": cv,
+        "personal_info": getattr(cv, "personal_info", None),
+        "experiences": cv.experiences.all(),
+        "educations": cv.educations.all(),
+        "skills": cv.skills.all(),
+        "projects": cv.projects.all(),
+        "languages": cv.languages.all(),
+        "certifications": cv.certifications.all(),
+    }
+
+    template = get_template("cv/cv_pdf_template.html")
+    html = template.render(context)
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="cv_{cv.id}.pdf"'
+    pisa.CreatePDF(html, dest=response)
+
+    return response

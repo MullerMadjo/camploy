@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cv.title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        h1, h2 { color: #2c3e50; }
+        .section { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>{{ personal_info.full_name }}</h1>
+    <p>Email : {{ personal_info.email }}</p>
+    <p>Téléphone : {{ personal_info.phone }}</p>
+
+    <div class="section">
+        <h2>Expériences</h2>
+        {% for exp in experiences %}
+            <p><strong>{{ exp.job_title }}</strong> chez {{ exp.company }} ({{ exp.start_date }} - {% if exp.is_current %}Présent{% else %}{{ exp.end_date }}{% endif %})</p>
+            <p>{{ exp.description }}</p>
+        {% empty %}
+            <p>Aucune expérience renseignée.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Formations</h2>
+        {% for edu in educations %}
+            <p><strong>{{ edu.degree }}</strong> - {{ edu.institution }} ({{ edu.start_date }} - {% if edu.is_current %}En cours{% else %}{{ edu.end_date }}{% endif %})</p>
+        {% empty %}
+            <p>Aucune formation renseignée.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Compétences</h2>
+        <ul>
+            {% for skill in skills %}
+                <li>{{ skill.name }} ({{ skill.get_level_display }})</li>
+            {% empty %}
+                <p>Aucune compétence renseignée.</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Langues</h2>
+        <ul>
+            {% for lang in languages %}
+                <li>{{ lang.name }} - {{ lang.get_level_display }}</li>
+            {% empty %}
+                <p>Aucune langue renseignée.</p>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Projets</h2>
+        {% for proj in projects %}
+            <p><strong>{{ proj.name }}</strong> - {{ proj.description }}</p>
+        {% empty %}
+            <p>Aucun projet renseigné.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Certifications</h2>
+        {% for cert in certifications %}
+            <p><strong>{{ cert.name }}</strong> ({{ cert.issuer }})</p>
+        {% empty %}
+            <p>Aucune certification renseignée.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

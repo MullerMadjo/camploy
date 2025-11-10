@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block title %}Camploy AI - Assistant IA{% endblock %}
+{% block content %}
+<div id="camploy-ai-chat" class="page active">
+    <div class="container">
+        <!-- Header -->
+        <div class="chat-header fade-in">
+            <div class="chat-header-info">
+                <div class="ai-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="ai-info">
+                    <h1 class="ai-title">Camploy AI</h1>
+                    <p class="ai-status"><span class="status-indicator online"></span>Assistant IA - En ligne</p>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <!-- ❌ Bouton supprimer retiré -->
+                <button class="chat-action-btn" id="exportChatBtn" title="Exporter la conversation"><i class="fa-solid fa-download"></i></button>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-container fade-in">
+            <div class="chat-messages" id="chatMessages">
+                {% if conversation_history|length == 0 %}
+                <!-- Message de bienvenue seulement si pas d'historique -->
+                <div class="message ai-message">
+                    <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Bonjour ! Je suis Camploy AI, votre assistant intelligent pour optimiser votre carrière. Comment puis-je vous aider aujourd'hui ?</p>
+                            <div class="message-time">Maintenant</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Input -->
+            <div class="chat-input-container">
+                <form id="chatForm" class="chat-form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="input-wrapper">
+                        <textarea id="messageInput" class="chat-input" placeholder="Tapez votre message ici..." rows="1"></textarea>
+                        <button type="button" class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator" style="display:none;">
+            <div class="message ai-message">
+                <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="message-content">
+                    <div class="message-bubble typing"><div class="typing-dots"><span></span><span></span><span></span></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ❌ Modal clear supprimée -->
+
+<!-- injecte l'historique côté serveur de façon sûre -->
+{{ conversation_history|json_script:"json_conversation_history" }}
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatForm = document.getElementById('chatForm');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const exportChatBtn = document.getElementById('exportChatBtn');
+
+    // Récupère l'historique injecté en toute sécurité
+    let conversationHistory = [];
+    try {
+        const node = document.getElementById('json_conversation_history');
+        conversationHistory = node ? JSON.parse(node.textContent) : [];
+    } catch (e) {
+        console.error('Impossible de parser conversation_history:', e);
+        conversationHistory = [];
+    }
+
+    // Injecte les anciens messages (si existants)
+    conversationHistory.forEach(msg => addMessage(msg.content, msg.sender, msg.time));
+
+    // Auto-resize textarea
+    messageInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        sendBtn.disabled = !this.value.trim();
+    });
+
+    // Fonction centrale d'envoi
+    function handleSend() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+        addMessage(message, 'user');
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+        sendBtn.disabled = true;
+        showTypingIndicator();
+        sendToAI(message);
+    }
+
+    // Soumettre via Enter (sans shift) dans le textarea
+    messageInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    });
+
+    // Clic sur bouton envoyer
+    sendBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        handleSend();
+    });
+
+    // Ajouter un message dans le DOM
+    function addMessage(content, sender, time=null) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        const currentTime = time || new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const htmlContent = sender === 'user' ? marked.parseInline(content) : marked.parse(content);
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar"><i class="fa-solid fa-${sender === 'user' ? 'user' : 'robot'}"></i></div>
+            <div class="message-content">
+                <div class="message-bubble">
+                    ${htmlContent}
+                    <div class="message-time">${currentTime}</div>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        conversationHistory.push({
+            content: content,
+            sender: sender,
+            time: currentTime
+        });
+    }
+
+    function showTypingIndicator() { typingIndicator.style.display = 'block'; chatMessages.scrollTop = chatMessages.scrollHeight; }
+    function hideTypingIndicator() { typingIndicator.style.display = 'none'; }
+
+    async function sendToAI(message) {
+        try {
+            const response = await fetch('{% url "camploy_ai_chat_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({ message: message, conversation_history: conversationHistory })
+            });
+            const data = await response.json();
+            hideTypingIndicator();
+            if (data.success) addMessage(data.response, 'ai');
+            else addMessage('Désolé, une erreur est survenue.', 'ai');
+        } catch (error) {
+            hideTypingIndicator();
+            addMessage('Erreur de connexion. Vérifiez votre connexion internet.', 'ai');
+            console.error('Error:', error);
+        }
+    }
+
+    // ✅ Plus d'option pour effacer, seulement exporter
+    exportChatBtn.addEventListener('click', () => {
+        if (conversationHistory.length === 0) { alert('Aucune conversation à exporter.'); return; }
+        const chatContent = conversationHistory.map(msg => `[${msg.time}] ${msg.sender === 'user' ? 'Vous' : 'Camploy AI'}: ${msg.content}`).join('\n\n');
+        const blob = new Blob([chatContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `conversation-camploy-ai-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+});
+</script>
+{% endblock %}
